@@ -1,0 +1,60 @@
+buildscript {
+    ext {
+        springBootVersion = '2.3.3.RELEASE'
+        springCloudVersion = 'Hoxton.SR8'
+        springBootManagementVersion = '1.0.10.RELEASE'
+    }
+
+    repositories {
+        def REPOSITORY_URL = 'http://maven.aliyun.com/nexus/content/groups/public/'
+        all { ArtifactRepository repo ->
+            if(repo instanceof MavenArtifactRepository){
+                def url = repo.url.toString()
+                if (url.startsWith('https://repo1.maven.org/maven2') || url.startsWith('https://jcenter.bintray.com/')) {
+                    remove repo
+                }
+            }
+        }
+        maven {
+            url REPOSITORY_URL
+        }
+    }
+
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+        classpath("io.spring.gradle:dependency-management-plugin:${springBootManagementVersion}")
+    }
+}
+
+subprojects {
+    /* 使用二进制插件 */
+    apply plugin: 'java' /* java是Gradle的核心插件，是内置的，内置插件不需要配置依赖路径 */
+    apply plugin: 'idea' /* 同上  让Gradle自动生成Intellij的项目文件*/
+    apply plugin: 'io.spring.dependency-management'
+
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+
+    group = 'com.galaxy.stars'
+    version = '1.0.0.RELEASE'
+
+    repositories {
+        def REPOSITORY_URL = 'http://maven.aliyun.com/nexus/content/groups/public/'
+        all { ArtifactRepository repo ->
+            if(repo instanceof MavenArtifactRepository){
+                def url = repo.url.toString()
+                if (url.startsWith('https://repo1.maven.org/maven2') || url.startsWith('https://jcenter.bintray.com/')) {
+                    remove repo
+                }
+            }
+        }
+        maven {
+            url REPOSITORY_URL
+        }
+    }
+
+    dependencyManagement {
+        imports { mavenBom("org.springframework.boot:spring-boot-dependencies:${springBootVersion}") }
+        imports { mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}" }
+    }
+}
