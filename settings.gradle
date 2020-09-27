@@ -1,3 +1,5 @@
 rootProject.name = 'jupiter'
 include 'eureka-server'
+include 'performance'
+include 'api'
 

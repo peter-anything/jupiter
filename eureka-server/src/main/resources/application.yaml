@@ -1,9 +1,12 @@
-security:
-  basic:
-    enabled: true
-  user:
-    name: user
-    password: password123
+#应用名称及验证账号
+spring:
+  application:
+    name: eureka
+  security:
+    user:
+      name: root
+      password: root
+
 server:
   port: 8761
 eureka:
@@ -12,3 +15,11 @@ eureka:
     fetch-registry: false
     service-url:
       defaultZone: http://user:password123@localhost:8761/eureka
+  server:
+    #关闭自我保护
+    enable-self-preservation: false
+    #清理间隔时间
+    eviction-interval-timer-in-ms: 5000
+logging:
+  level:
+    root: info
